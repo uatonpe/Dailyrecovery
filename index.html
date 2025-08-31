@@ -1,0 +1,543 @@
+
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>दैनंदिन रिकवरी रेकॉर्ड</title>
+  <style>
+    :root {
+      --brand-blue: #007AFF;
+      --brand-blue-hover: #0056b3;
+      --brand-green: #34C759;
+      --brand-green-hover: #2ca048;
+      --brand-red: #FF3B30;
+      
+      --bg-color: #f0f2f5;
+      --card-bg-color: #ffffff;
+      --text-primary: #1c1c1e;
+      --text-secondary: #636366;
+      --border-color: #d1d1d6;
+      --input-bg: #f7f7f7;
+      
+      --border-radius-s: 6px;
+      --border-radius-m: 10px;
+      --shadow-light: 0 4px 12px rgba(0, 0, 0, 0.08);
+      --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    *, *::before, *::after {
+        box-sizing: border-box;
+    }
+
+    html {
+        font-size: 16px;
+    }
+
+    body {
+      font-family: var(--font-stack);
+      background-color: var(--bg-color);
+      margin: 0;
+      padding: 1rem;
+      color: var(--text-primary);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .main-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .main-header h1 {
+      font-size: 1.75rem;
+      font-weight: 600;
+      margin: 0 0 0.25rem 0;
+    }
+
+    .main-header p {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      margin: 0;
+    }
+
+    .card {
+      background-color: var(--card-bg-color);
+      border-radius: var(--border-radius-m);
+      box-shadow: var(--shadow-light);
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+    }
+
+    .card-header {
+      padding: 0.75rem 1.5rem;
+      background-color: #f9f9f9;
+      border-bottom: 1px solid var(--border-color);
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+
+    .card-body {
+      padding: 1.5rem;
+    }
+    
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    th, td {
+      padding: 0.75rem 0;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+      vertical-align: middle;
+    }
+    
+    table tr:last-child > td {
+        border-bottom: none;
+    }
+
+    th {
+      color: var(--text-secondary);
+      font-weight: 500;
+      font-size: 0.9rem;
+      padding-right: 1rem;
+      white-space: nowrap;
+    }
+    
+    .summary-row td {
+        font-weight: 600;
+    }
+    
+    .summary-row td:last-child input {
+        font-weight: 700;
+        color: var(--brand-blue);
+    }
+    
+    .final-diff-row td:last-child input[data-positive="false"] {
+        color: var(--brand-red);
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="date"] {
+      width: 100%;
+      padding: 0.6rem 0.75rem;
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius-s);
+      font-size: 1rem;
+      font-family: var(--font-stack);
+      background-color: #fff;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    input:focus {
+      border-color: var(--brand-blue);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
+    }
+
+    input[readonly] {
+      background-color: var(--input-bg);
+      cursor: default;
+      font-weight: 600;
+      border-style: dashed;
+    }
+    input[readonly]:focus {
+        box-shadow: none;
+        border-color: var(--border-color);
+    }
+
+    #loan-table-container {
+        padding: 0;
+        margin: 1rem 0;
+    }
+    #loanTable {
+        background: #fafcff;
+        border: 1px solid #e0e6f0;
+        border-radius: var(--border-radius-m);
+    }
+    #loanTable th, #loanTable td {
+        padding: 0.5rem 1rem;
+        border-color: #e0e6f0;
+    }
+    #loanTable th {
+        font-size: 0.85rem;
+    }
+    #loanTable td:nth-child(2) { width: 40%; }
+    #loanTable td:nth-child(3) { width: 100px; text-align: center; }
+    #loanTable input { font-size: 0.95rem; }
+
+    .action-cell {
+        text-align: right;
+        padding: 0.5rem 0;
+    }
+
+    button {
+      background-color: var(--brand-blue);
+      color: white;
+      padding: 0.6rem 1.25rem;
+      border: none;
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-weight: 500;
+      border-radius: var(--border-radius-s);
+      transition: background-color 0.2s ease;
+      font-family: var(--font-stack);
+    }
+    button:hover {
+      background-color: var(--brand-blue-hover);
+    }
+    
+    .add-loan-btn {
+        background-color: transparent;
+        color: var(--brand-blue);
+        border: 1px solid var(--brand-blue);
+    }
+    .add-loan-btn:hover {
+        background-color: rgba(0, 122, 255, 0.1);
+    }
+    
+    .delete-row-btn {
+        background: transparent;
+        border: none;
+        color: var(--brand-red);
+        padding: 0.4rem;
+        border-radius: 50%;
+        width: 32px;
+        height: 32px;
+        line-height: 1;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .delete-row-btn:hover {
+        background-color: rgba(255, 59, 48, 0.1);
+    }
+
+    .print-btn-container {
+      text-align: center;
+      margin-top: 1.5rem;
+    }
+    .print-btn {
+        background-color: var(--brand-green);
+        padding: 0.75rem 2rem;
+        font-size: 1.1rem;
+    }
+    .print-btn:hover {
+        background-color: var(--brand-green-hover);
+    }
+
+    /* Responsive adjustments for small screens */
+    @media (max-width: 600px) {
+        body { padding: 0.5rem; }
+        .container { padding: 0; }
+        .card { border-radius: 0; margin-bottom: 1rem; box-shadow: none; border-bottom: 1px solid var(--border-color); }
+        .card-body { padding: 1rem; }
+        .card-header { padding: 0.75rem 1rem; }
+        .main-header h1 { font-size: 1.5rem; }
+
+        th { font-size: 0.8rem; padding-right: 0.5rem;}
+        td, th { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+        td:first-child { max-width: 120px; word-wrap: break-word; }
+        #loanTable th, #loanTable td { padding-left: 0.75rem; padding-right: 0.75rem;}
+    }
+
+    /* --- PRINT STYLES FOR A4 --- */
+    @media print {
+      body {
+        background-color: #fff; padding: 0; margin: 0;
+        font-size: 9.5pt; color: #000; line-height: 1.4;
+      }
+      .container {
+        box-shadow: none; border: none; max-width: 100%;
+        margin: 0; padding: 1.5cm 1cm; /* Standard A4 margins */
+      }
+      .main-header { margin-bottom: 0.8cm; }
+      .main-header h1 { font-size: 14pt; }
+      .main-header p { font-size: 10pt; color: #333; }
+
+      .card {
+        box-shadow: none; border: 1px solid #bbb;
+        border-radius: 0; margin-bottom: 0.6cm;
+        page-break-inside: avoid; /* Crucial to keep cards from splitting */
+      }
+      .card-header {
+        background-color: #f0f0f0 !important; color: #000 !important;
+        font-size: 10pt; font-weight: bold;
+        padding: 4px 10px;
+        border-bottom: 1px solid #bbb;
+      }
+      .card-body {
+        padding: 5px 10px;
+      }
+      
+      table { font-size: 9pt; }
+      th, td {
+        padding: 4px 0; /* Reduced vertical padding */
+        border-color: #e0e0e0;
+      }
+      th { font-weight: bold; color: #333; }
+      
+      input[type="text"], input[type="number"], input[type="date"] {
+        border: 1px solid #ccc;
+        padding: 3px 5px;
+        font-size: 9pt;
+        background-color: #fff !important; color: #000 !important;
+        box-shadow: none !important;
+        min-height: auto;
+      }
+      input[readonly] {
+        background-color: #f5f5f5 !important;
+        border-style: solid;
+        border-color: #ccc;
+        font-weight: bold;
+      }
+
+      #loan-table-container { margin: 5px 0; }
+      #loanTable { border: 1px solid #ccc; }
+      #loanTable th, #loanTable td {
+        padding: 3px 6px; /* Very compact */
+        border-color: #ddd;
+      }
+
+      .action-cell, .print-btn-container, .delete-row-btn {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <main class="container">
+    <header class="main-header">
+      <h1>अनिक फायनान्सीयल सर्वीसेस</h1>
+      <p>दैनंदिन रिकवरी रेकॉर्ड तपशील</p>
+    </header>
+
+    <form id="recoveryForm" onsubmit="return false;">
+      
+      <section class="card">
+        <div class="card-body">
+          <table>
+            <tr>
+              <th>स्टाफचे नांव</th>
+              <td><input type="text" id="staffName" placeholder="स्टाफचे संपूर्ण नाव लिहा"></td>
+            </tr>
+            <tr>
+              <th>दिनांक</th>
+              <td><input type="date" id="reportDate"></td>
+            </tr>
+          </table>
+        </div>
+      </section>
+
+      <section class="card">
+        <header class="card-header">एकूण वसुली तपशील (Recovery Details)</header>
+        <div class="card-body">
+          <table>
+            <tr>
+              <td>आजची एकूण ऑनलाइन रिकवरी (A)</td>
+              <td><input type="number" id="onlineRecovery" placeholder="0.00" /></td>
+            </tr>
+            <tr class="summary-row">
+              <td>आजची एकूण ऑफलाईन रिकवरी (B)</td>
+              <td><input type="number" id="offlineRecoveryTotal" readonly placeholder="0.00" /></td>
+            </tr>
+            <tr>
+              <td colspan="2" id="loan-table-container">
+                <table id="loanTable">
+                  <thead>
+                    <tr>
+                      <th>कर्ज क्र. (Loan No)</th>
+                      <th>रक्कम (₹)</th>
+                      <th>कृती</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Loan rows will be added here by JavaScript -->
+                  </tbody>
+                </table>
+                <div class="action-cell">
+                    <button type="button" class="add-loan-btn" onclick="addLoanRow()">+ नवीन कर्ज जोडा</button>
+                </div>
+              </td>
+            </tr>
+            <tr class="summary-row">
+              <td>एकूण रिकवरी (C = A+B)</td>
+              <td><input type="number" id="totalRecovery" readonly placeholder="0.00" /></td>
+            </tr>
+            <tr>
+              <td>प्रारंभीची शिल्लक रक्कम (D)</td>
+              <td><input type="number" id="openingAmount" placeholder="0.00" /></td>
+            </tr>
+            <tr class="summary-row">
+              <td>एकूण रक्कम (E = C+D)</td>
+              <td><input type="number" id="totalAmount" readonly placeholder="0.00" /></td>
+            </tr>
+          </table>
+        </div>
+      </section>
+      
+      <section class="card">
+        <header class="card-header">वरील रक्कमेची फोड (Cash Breakdown)</header>
+        <div class="card-body">
+            <table>
+              <tr>
+                <td>स्टेट बॅंकेत भरणा (A)</td>
+                <td><input type="number" id="sbiAmount" placeholder="0.00" /></td>
+              </tr>
+              <tr>
+                <td>महा ग्रामीणमध्ये भरणा (B)</td>
+                <td><input type="number" id="mgbAmount" placeholder="0.00" /></td>
+              </tr>
+              <tr>
+                <td>फोनपे QR (C)</td>
+                <td><input type="number" id="phonePayAmount" placeholder="0.00" /></td>
+              </tr>
+              <tr>
+                <td>अन्य बॅंक (D)</td>
+                <td><input type="number" id="otherBankAmount" placeholder="0.00" /></td>
+              </tr>
+              <tr>
+                <td>वरीष्ठांकडे जमा (E)</td>
+                <td><input type="number" id="cashsr" placeholder="0.00" /></td>
+              </tr>
+              <tr>
+                <td>ऑफिस मध्ये जमा (F)</td>
+                <td><input type="number" id="officeAmount" placeholder="0.00" /></td>
+              </tr>
+              <tr>
+                <td>हातावर शिल्लक (G)</td>
+                <td><input type="number" id="cashInHandAmount" placeholder="0.00" /></td>
+              </tr>
+              <tr class="summary-row">
+                <td>एकूण फोड (A ते G)</td>
+                <td><input type="number" id="totalBreakdown" readonly placeholder="0.00" /></td>
+              </tr>
+              <tr class="summary-row final-diff-row">
+                <td>तफावत (E - एकूण फोड)</td>
+                <td><input type="number" id="difference" readonly placeholder="0.00" /></td>
+              </tr>
+            </table>
+        </div>
+      </section>
+
+      <div class="print-btn-container">
+        <button type="button" onclick="window.print()" class="print-btn">रेकॉर्ड प्रिंट करा</button>
+      </div>
+    </form>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const today = new Date();
+      const yyyy = today.getFullYear();
+      const mm = String(today.getMonth() + 1).padStart(2, '0');
+      const dd = String(today.getDate()).padStart(2, '0');
+      document.getElementById('reportDate').value = `${yyyy}-${mm}-${dd}`;
+      
+      addLoanRow();
+      
+      const form = document.getElementById('recoveryForm');
+      form.addEventListener('input', handleFormInput);
+
+      document.getElementById('loanTable').querySelector('tbody').addEventListener('click', handleLoanTableClick);
+    });
+
+    function getFloatValue(id) {
+        const element = document.getElementById(id);
+        return element ? parseFloat(element.value) || 0 : 0;
+    }
+
+    function addLoanRow() {
+      const loanTableBody = document.getElementById("loanTable").getElementsByTagName('tbody')[0];
+      const newRow = loanTableBody.insertRow(); 
+
+      newRow.innerHTML = `
+        <td><input type="text" class="loanNo" placeholder="कर्ज क्रमांक"></td>
+        <td><input type="number" class="loanAmount" placeholder="0.00"></td>
+        <td>
+          <button type="button" class="delete-row-btn" title="ही नोंद काढा">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+              <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+            </svg>
+          </button>
+        </td>
+      `;
+    }
+    
+    function handleFormInput(event) {
+        if (event.target.classList.contains('loanAmount')) {
+            calculateOfflineRecovery();
+        } else {
+            calculateAllTotals();
+        }
+    }
+
+    function handleLoanTableClick(event) {
+        const deleteButton = event.target.closest('.delete-row-btn');
+        if (deleteButton) {
+            const row = deleteButton.closest('tr');
+            row.remove();
+            calculateOfflineRecovery(); 
+        }
+    }
+
+    function calculateOfflineRecovery() {
+      const loanAmountInputs = document.getElementsByClassName("loanAmount");
+      let totalOfflineRecovery = 0;
+
+      for (let i = 0; i < loanAmountInputs.length; i++) {
+        totalOfflineRecovery += parseFloat(loanAmountInputs[i].value) || 0;
+      }
+      
+      document.getElementById("offlineRecoveryTotal").value = totalOfflineRecovery.toFixed(2);
+      
+      calculateAllTotals(); 
+    }
+
+    function calculateAllTotals() {
+      const onlineRecovery = getFloatValue("onlineRecovery");
+      const offlineRecovery = getFloatValue("offlineRecoveryTotal");
+      const openingAmount = getFloatValue("openingAmount");
+      
+      const sbiAmount = getFloatValue("sbiAmount");
+      const mgbAmount = getFloatValue("mgbAmount");
+      const phonePayAmount = getFloatValue("phonePayAmount");
+      const otherBankAmount = getFloatValue("otherBankAmount");
+      const cashsr = getFloatValue("cashsr"); 
+      const officeAmount = getFloatValue("officeAmount");
+      const cashInHandAmount = getFloatValue("cashInHandAmount");
+
+      const totalRecovery = onlineRecovery + offlineRecovery; 
+      const totalAmount = openingAmount + totalRecovery; 
+      
+      const totalBreakdown = sbiAmount + mgbAmount + phonePayAmount + otherBankAmount + cashsr + officeAmount + cashInHandAmount;
+      const difference = totalAmount - totalBreakdown;
+
+      document.getElementById("totalRecovery").value = totalRecovery.toFixed(2);
+      document.getElementById("totalAmount").value = totalAmount.toFixed(2);
+      document.getElementById("totalBreakdown").value = totalBreakdown.toFixed(2);
+      
+      const differenceInput = document.getElementById("difference");
+      differenceInput.value = difference.toFixed(2);
+      
+      if (difference.toFixed(2) !== '0.00' && difference.toFixed(2) !== '-0.00') {
+          differenceInput.setAttribute('data-positive', 'false');
+      } else {
+          differenceInput.setAttribute('data-positive', 'true');
+      }
+    }
+  </script>
+
+</body>
+</html>
