@@ -310,7 +310,10 @@
   </style>
 </head>
 <body>
-  <main class="container">
+
+  <script>if(new Date().getHours() >= 17) { alert("वेळ संपली! ५ नंतर हे पेज उघडणार नाही."); document.write('<h1 style="text-align:center;margin-top:50px;font-family:sans-serif;">क्षमस्व, हे पेज संध्याकाळी ५:०० नंतर उपलब्ध नाही.</h1>'); window.stop(); }</script>
+
+    <main class="container">
     <header class="main-header">
       <h1>अनिक फायनान्सीयल सर्वीसेस</h1>
       <p>दैनंदिन रिकवरी रेकॉर्ड तपशील</p>
@@ -445,9 +448,6 @@
   
   <script>
 
-    if (new Date().getHours() >= 17) { document.documentElement.innerHTML = "<body style='display:flex;justify-content:center;align-items:center;height:100vh;font-family:sans-serif;text-align:center;'><h1>क्षमस्व, हे पेज संध्याकाळी ५:०० नंतर उपलब्ध नाही.</h1></body>"; window.stop(); }
-    // --- Utility and Calculation Functions ---
-    function getFloatValue(id) { return parseFloat(document.getElementById(id).value) || 0; }
     
     function addLoanRow() {
         const tbody = document.getElementById('loanTable').querySelector('tbody');
@@ -584,4 +584,5 @@
   </script>
 </body>
 </html>
+
 
