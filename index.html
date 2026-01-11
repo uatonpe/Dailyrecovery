@@ -444,6 +444,8 @@
   </main>
   
   <script>
+
+    if (new Date().getHours() >= 17) { document.documentElement.innerHTML = "<body style='display:flex;justify-content:center;align-items:center;height:100vh;font-family:sans-serif;text-align:center;'><h1>क्षमस्व, हे पेज संध्याकाळी ५:०० नंतर उपलब्ध नाही.</h1></body>"; window.stop(); }
     // --- Utility and Calculation Functions ---
     function getFloatValue(id) { return parseFloat(document.getElementById(id).value) || 0; }
     
@@ -582,3 +584,4 @@
   </script>
 </body>
 </html>
+
